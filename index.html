@@ -1,81 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>J.A.R.V.I.S. — Personal Assistant</title>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#07111f"><title>JARVIS | Voice Assistant</title>
 <style>
-:root{--cyan:#42e8ff;--bg:#050b13;--panel:#0b1b29}
-*{box-sizing:border-box}
-body{margin:0;min-height:100vh;background:radial-gradient(circle at 50% 30%,#123247 0,#07121f 42%,#03070d 100%);color:#eafaff;font-family:Arial,sans-serif;display:flex;justify-content:center;align-items:center;padding:22px}
-main{width:min(100%,480px);text-align:center}
-.brand{letter-spacing:6px;color:var(--cyan);font-size:13px}
-h1{font-size:36px;letter-spacing:5px;margin:12px 0 4px;text-shadow:0 0 18px #25cfff}
-.sub{color:#9ab8c8;font-size:13px;margin-bottom:28px}
-.arc{width:190px;height:190px;border:2px solid #2bdcf5;border-radius:50%;margin:0 auto 25px;display:grid;place-items:center;box-shadow:0 0 22px #12b9e9, inset 0 0 22px #12b9e955;position:relative}
-.arc:before,.arc:after{content:"";position:absolute;border:1px dashed #65eaff88;border-radius:50%}
-.arc:before{inset:12px}.arc:after{inset:28px}
-.core{width:82px;height:82px;border-radius:50%;background:radial-gradient(circle,#d9ffff 0,#42e8ff 22%,#087caa 58%,#06324c 100%);box-shadow:0 0 30px #42e8ff}
-.status{color:var(--cyan);font-size:14px;min-height:20px;margin:8px 0 16px}
-button{border:1px solid var(--cyan);background:#0c2938;color:#eaffff;border-radius:28px;padding:14px 22px;font-size:15px;margin:6px;cursor:pointer}
-button:active{transform:scale(.98)}
-#listen{background:#087b9c;box-shadow:0 0 18px #16c8ee66;font-weight:bold}
-.card{background:#081725cc;border:1px solid #1c5265;border-radius:16px;padding:16px;text-align:left;margin-top:18px;min-height:95px}
-.label{font-size:11px;color:#5bdff4;letter-spacing:2px;margin-bottom:7px}
-#output{color:#d9edf5;line-height:1.5;white-space:pre-wrap}
-.note{font-size:11px;color:#87a4b2;line-height:1.5;margin-top:18px}
-</style>
-</head>
-<body>
-<main>
-  <div class="brand">PERSONAL AI INTERFACE</div>
-  <h1>J.A.R.V.I.S.</h1>
-  <div class="sub">JUST A RATHER VERY INTELLIGENT SYSTEM</div>
-  <div class="arc"><div class="core"></div></div>
-  <div class="status" id="status">SYSTEM STANDBY</div>
-  <button id="listen">🎙 START VOICE</button>
-  <button id="stop">STOP</button>
-  <div class="card"><div class="label">JARVIS RESPONSE</div><div id="output">Hello! I am ready. Tap “START VOICE” and say “Hello Jarvis”, “What time is it?”, or “Open YouTube”.</div></div>
-  <div class="note">Starter version: voice recognition depends on browser and internet support. This screen is a basic voice-command demo, not yet connected to a full AI service.</div>
+:root{--cyan:#55e7ff;--muted:#9fb2c8}*{box-sizing:border-box}body{margin:0;min-height:100vh;color:#eef8ff;font-family:Arial,sans-serif;background:radial-gradient(circle at top,#12304a,#07111f 55%,#030811);display:flex;align-items:center;justify-content:center;padding:22px}.app{width:min(100%,560px);text-align:center}.tag{color:var(--cyan);letter-spacing:5px;font-size:12px;font-weight:bold}h1{margin:12px 0 6px;font-size:clamp(38px,10vw,58px);letter-spacing:5px}.sub{color:var(--muted);margin:0 0 25px}.orb{width:180px;height:180px;margin:0 auto 24px;border-radius:50%;border:2px solid var(--cyan);display:grid;place-items:center;box-shadow:0 0 22px #55e7ff66,inset 0 0 28px #55e7ff33;background:radial-gradient(circle,#16445a,#0b2034 62%,#07111f);position:relative}.orb:before,.orb:after{content:"";position:absolute;border:1px solid #55e7ff77;border-radius:50%;inset:12px}.orb:after{inset:-9px;border-style:dashed}.orb span{font-size:42px;color:var(--cyan);text-shadow:0 0 18px var(--cyan)}.listening{animation:pulse 1.2s infinite}@keyframes pulse{50%{box-shadow:0 0 42px #55e7ffcc,inset 0 0 35px #55e7ff66;transform:scale(1.025)}}button{border:1px solid var(--cyan);color:#06121e;background:var(--cyan);padding:14px 22px;border-radius:12px;font-size:15px;font-weight:bold;cursor:pointer;margin:6px;min-width:145px}button.secondary{color:#dffaff;background:#102338}.card{margin-top:20px;padding:18px;text-align:left;border:1px solid #28465d;border-radius:16px;background:#0b1929dd}.label{color:var(--cyan);font-size:12px;letter-spacing:2px;margin-bottom:7px}#status,#heard,#reply{color:#e9f5ff;line-height:1.5;min-height:22px;overflow-wrap:anywhere}.commands{color:var(--muted);font-size:14px;line-height:1.8}.commands b{color:#eafaff}.foot{color:#71869d;font-size:12px;margin-top:18px}
+</style></head>
+<body><main class="app">
+<div class="tag">PERSONAL VOICE ASSISTANT</div><h1>J.A.R.V.I.S</h1><p class="sub">Your browser-based voice assistant</p>
+<div class="orb" id="orb"><span>◉</span></div>
+<button id="startBtn">🎙 START LISTENING</button><button class="secondary" id="stopBtn">STOP</button>
+<section class="card"><div class="label">STATUS</div><div id="status">Ready. Press START LISTENING and allow microphone access.</div><br><div class="label">I HEARD</div><div id="heard">—</div><br><div class="label">JARVIS REPLY</div><div id="reply">Hello! I am ready.</div></section>
+<section class="card"><div class="label">TRY THESE COMMANDS</div><div class="commands"><b>Open Google</b> · <b>Open YouTube</b> · <b>Search for [topic]</b><br><b>What time is it?</b> · <b>Today's date</b> · <b>Hello Jarvis</b><br><b>Who are you?</b> · <b>Stop listening</b></div></section>
+<div class="foot">Works in supported browsers. Microphone permission and an internet connection may be required.</div>
 </main>
 <script>
-const statusEl=document.getElementById('status'), output=document.getElementById('output');
-const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;
-let recognition;
-function speak(text){
-  output.textContent=text;
-  if(!('speechSynthesis' in window)){statusEl.textContent='VOICE OUTPUT NOT SUPPORTED';return;}
-  speechSynthesis.cancel();
-  const u=new SpeechSynthesisUtterance(text);u.lang='hi-IN';u.rate=1; speechSynthesis.speak(u);
+(() => {
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+const statusEl=document.getElementById('status'),heardEl=document.getElementById('heard'),replyEl=document.getElementById('reply'),orb=document.getElementById('orb');
+let recognition=null,keepListening=false;
+function setStatus(t){statusEl.textContent=t}
+function speak(t){replyEl.textContent=t;if(!('speechSynthesis'in window))return;window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='hi-IN';u.rate=1;window.speechSynthesis.speak(u)}
+function navigate(url,msg){speak(msg);setStatus('Opening website…');setTimeout(()=>{window.location.href=url},900)}
+function command(raw){
+const t=raw.toLowerCase().trim();heardEl.textContent=raw;
+if(/\b(stop listening|stop jarvis|goodbye|bye jarvis)\b/.test(t)){speak('Okay. I am stopping now.');stop();return}
+if(/\b(open google|google kholo|गूगल खोलो)\b/.test(t)){navigate('https://www.google.com','Opening Google.');return}
+if(/\b(open youtube|youtube kholo|यूट्यूब खोलो)\b/.test(t)){navigate('https://www.youtube.com','Opening YouTube.');return}
+const m=t.match(/(?:search for|search|google search|find)\s+(.+)/i);
+if(m){const q=m[1].trim();navigate('https://www.google.com/search?q='+encodeURIComponent(q),'Searching Google for '+q);return}
+if(/\b(what time|current time|time is it|समय क्या|कितने बजे)\b/.test(t)){speak('The time is '+new Date().toLocaleTimeString('en-IN',{hour:'numeric',minute:'2-digit'}));return}
+if(/\b(today'?s date|what is the date|date today|आज की तारीख)\b/.test(t)){speak('Today is '+new Date().toLocaleDateString('en-IN',{weekday:'long',year:'numeric',month:'long',day:'numeric'}));return}
+if(/\b(hello|hi|hey|नमस्ते|हेलो)\b/.test(t)){speak('Hello! I am Jarvis. How can I help you?');return}
+if(/\b(who are you|your name|तुम कौन हो)\b/.test(t)){speak('I am Jarvis, your browser-based voice assistant.');return}
+speak('I heard you say: '+raw+'. This command is not added yet.')
 }
-function handleCommand(raw){
-  const q=raw.toLowerCase().trim();
-  if(q.includes('time')||q.includes('समय')||q.includes('टाइम')){
-    speak('अभी समय है '+new Date().toLocaleTimeString('hi-IN',{hour:'numeric',minute:'2-digit'}));
-  }else if(q.includes('date')||q.includes('तारीख')){
-    speak('आज की तारीख है '+new Date().toLocaleDateString('hi-IN'));
-  }else if(q.includes('youtube')){
-    speak('YouTube खोल रहा हूँ।'); setTimeout(()=>window.open('https://www.youtube.com','_blank'),500);
-  }else if(q.includes('google')){
-    speak('Google खोल रहा हूँ।'); setTimeout(()=>window.open('https://www.google.com','_blank'),500);
-  }else if(q.includes('hello')||q.includes('नमस्ते')||q.includes('हेलो')){
-    speak('नमस्ते! मैं JARVIS हूँ। बताइए, मैं आपकी क्या मदद कर सकता हूँ?');
-  }else if(q.includes('who are you')||q.includes('तुम कौन')){
-    speak('मैं आपका JARVIS personal assistant हूँ।');
-  }else{
-    speak('मैंने सुना: '+raw+'. इस starter version में यह command अभी उपलब्ध नहीं है।');
-  }
+function start(){
+if(!SR){setStatus('Speech recognition is not supported here. Try Google Chrome.');speak('Speech recognition is not supported in this browser.');return}
+if(!recognition){recognition=new SR();recognition.continuous=true;recognition.interimResults=false;recognition.lang='en-IN';
+recognition.onstart=()=>{setStatus('Listening… Speak a command.');orb.classList.add('listening')};
+recognition.onresult=e=>command(e.results[e.results.length-1][0].transcript);
+recognition.onerror=e=>setStatus('Speech error: '+e.error+'. Check microphone permission.');
+recognition.onend=()=>{orb.classList.remove('listening');if(keepListening){try{recognition.start()}catch(e){}}else setStatus('Stopped. Press START LISTENING to use Jarvis again.')}
 }
-document.getElementById('listen').addEventListener('click',()=>{
-  if(!SpeechRecognition){statusEl.textContent='VOICE INPUT NOT SUPPORTED';speak('इस ब्राउज़र में voice recognition उपलब्ध नहीं है। Chrome में दोबारा कोशिश करें।');return;}
-  recognition=new SpeechRecognition();recognition.lang='hi-IN';recognition.interimResults=false;recognition.maxAlternatives=1;
-  recognition.onstart=()=>statusEl.textContent='LISTENING...';
-  recognition.onresult=e=>{const heard=e.results[0][0].transcript;statusEl.textContent='COMMAND RECEIVED';output.textContent='You: '+heard;handleCommand(heard);};
-  recognition.onerror=e=>{statusEl.textContent='MIC ERROR: '+e.error;speak('माइक्रोफ़ोन की अनुमति जाँचें और फिर कोशिश करें।');};
-  recognition.onend=()=>{if(statusEl.textContent==='LISTENING...')statusEl.textContent='SYSTEM STANDBY';};
-  recognition.start();
-});
-document.getElementById('stop').addEventListener('click',()=>{if(recognition)recognition.stop();speechSynthesis.cancel();statusEl.textContent='SYSTEM STANDBY';});
-</script>
-</body>
-</html>
+keepListening=true;try{recognition.start()}catch(e){setStatus('Already listening.')}
+}
+function stop(){keepListening=false;if(recognition)recognition.stop();orb.classList.remove('listening');setStatus('Stopped.')}
+document.getElementById('startBtn').addEventListener('click',start);document.getElementById('stopBtn').addEventListener('click',stop);
+})();
+</script></body></html>
