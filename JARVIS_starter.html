@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>J.A.R.V.I.S. — Personal Assistant</title>
+<style>
+:root{--cyan:#42e8ff;--bg:#050b13;--panel:#0b1b29}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:radial-gradient(circle at 50% 30%,#123247 0,#07121f 42%,#03070d 100%);color:#eafaff;font-family:Arial,sans-serif;display:flex;justify-content:center;align-items:center;padding:22px}
+main{width:min(100%,480px);text-align:center}
+.brand{letter-spacing:6px;color:var(--cyan);font-size:13px}
+h1{font-size:36px;letter-spacing:5px;margin:12px 0 4px;text-shadow:0 0 18px #25cfff}
+.sub{color:#9ab8c8;font-size:13px;margin-bottom:28px}
+.arc{width:190px;height:190px;border:2px solid #2bdcf5;border-radius:50%;margin:0 auto 25px;display:grid;place-items:center;box-shadow:0 0 22px #12b9e9, inset 0 0 22px #12b9e955;position:relative}
+.arc:before,.arc:after{content:"";position:absolute;border:1px dashed #65eaff88;border-radius:50%}
+.arc:before{inset:12px}.arc:after{inset:28px}
+.core{width:82px;height:82px;border-radius:50%;background:radial-gradient(circle,#d9ffff 0,#42e8ff 22%,#087caa 58%,#06324c 100%);box-shadow:0 0 30px #42e8ff}
+.status{color:var(--cyan);font-size:14px;min-height:20px;margin:8px 0 16px}
+button{border:1px solid var(--cyan);background:#0c2938;color:#eaffff;border-radius:28px;padding:14px 22px;font-size:15px;margin:6px;cursor:pointer}
+button:active{transform:scale(.98)}
+#listen{background:#087b9c;box-shadow:0 0 18px #16c8ee66;font-weight:bold}
+.card{background:#081725cc;border:1px solid #1c5265;border-radius:16px;padding:16px;text-align:left;margin-top:18px;min-height:95px}
+.label{font-size:11px;color:#5bdff4;letter-spacing:2px;margin-bottom:7px}
+#output{color:#d9edf5;line-height:1.5;white-space:pre-wrap}
+.note{font-size:11px;color:#87a4b2;line-height:1.5;margin-top:18px}
+</style>
+</head>
+<body>
+<main>
+  <div class="brand">PERSONAL AI INTERFACE</div>
+  <h1>J.A.R.V.I.S.</h1>
+  <div class="sub">JUST A RATHER VERY INTELLIGENT SYSTEM</div>
+  <div class="arc"><div class="core"></div></div>
+  <div class="status" id="status">SYSTEM STANDBY</div>
+  <button id="listen">🎙 START VOICE</button>
+  <button id="stop">STOP</button>
+  <div class="card"><div class="label">JARVIS RESPONSE</div><div id="output">Hello! I am ready. Tap “START VOICE” and say “Hello Jarvis”, “What time is it?”, or “Open YouTube”.</div></div>
+  <div class="note">Starter version: voice recognition depends on browser and internet support. This screen is a basic voice-command demo, not yet connected to a full AI service.</div>
+</main>
+<script>
+const statusEl=document.getElementById('status'), output=document.getElementById('output');
+const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;
+let recognition;
+function speak(text){
+  output.textContent=text;
+  if(!('speechSynthesis' in window)){statusEl.textContent='VOICE OUTPUT NOT SUPPORTED';return;}
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);u.lang='hi-IN';u.rate=1; speechSynthesis.speak(u);
+}
+function handleCommand(raw){
+  const q=raw.toLowerCase().trim();
+  if(q.includes('time')||q.includes('समय')||q.includes('टाइम')){
+    speak('अभी समय है '+new Date().toLocaleTimeString('hi-IN',{hour:'numeric',minute:'2-digit'}));
+  }else if(q.includes('date')||q.includes('तारीख')){
+    speak('आज की तारीख है '+new Date().toLocaleDateString('hi-IN'));
+  }else if(q.includes('youtube')){
+    speak('YouTube खोल रहा हूँ।'); setTimeout(()=>window.open('https://www.youtube.com','_blank'),500);
+  }else if(q.includes('google')){
+    speak('Google खोल रहा हूँ।'); setTimeout(()=>window.open('https://www.google.com','_blank'),500);
+  }else if(q.includes('hello')||q.includes('नमस्ते')||q.includes('हेलो')){
+    speak('नमस्ते! मैं JARVIS हूँ। बताइए, मैं आपकी क्या मदद कर सकता हूँ?');
+  }else if(q.includes('who are you')||q.includes('तुम कौन')){
+    speak('मैं आपका JARVIS personal assistant हूँ।');
+  }else{
+    speak('मैंने सुना: '+raw+'. इस starter version में यह command अभी उपलब्ध नहीं है।');
+  }
+}
+document.getElementById('listen').addEventListener('click',()=>{
+  if(!SpeechRecognition){statusEl.textContent='VOICE INPUT NOT SUPPORTED';speak('इस ब्राउज़र में voice recognition उपलब्ध नहीं है। Chrome में दोबारा कोशिश करें।');return;}
+  recognition=new SpeechRecognition();recognition.lang='hi-IN';recognition.interimResults=false;recognition.maxAlternatives=1;
+  recognition.onstart=()=>statusEl.textContent='LISTENING...';
+  recognition.onresult=e=>{const heard=e.results[0][0].transcript;statusEl.textContent='COMMAND RECEIVED';output.textContent='You: '+heard;handleCommand(heard);};
+  recognition.onerror=e=>{statusEl.textContent='MIC ERROR: '+e.error;speak('माइक्रोफ़ोन की अनुमति जाँचें और फिर कोशिश करें।');};
+  recognition.onend=()=>{if(statusEl.textContent==='LISTENING...')statusEl.textContent='SYSTEM STANDBY';};
+  recognition.start();
+});
+document.getElementById('stop').addEventListener('click',()=>{if(recognition)recognition.stop();speechSynthesis.cancel();statusEl.textContent='SYSTEM STANDBY';});
+</script>
+</body>
+</html>
