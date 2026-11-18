@@ -1,4 +1,59 @@
-<!DOCTYPE html>
+const websites = {
+  "google": "https://www.google.com",
+  "youtube": "https://www.youtube.com",
+  "instagram": "https://www.instagram.com",
+  "facebook": "https://www.facebook.com",
+  "whatsapp": "https://web.whatsapp.com",
+  "telegram": "https://web.telegram.org",
+  "twitter": "https://x.com",
+  "x": "https://x.com",
+  "snapchat": "https://www.snapchat.com",
+  "linkedin": "https://www.linkedin.com",
+  "pinterest": "https://www.pinterest.com",
+  "amazon": "https://www.amazon.in",
+  "flipkart": "https://www.flipkart.com",
+  "meesho": "https://www.meesho.com",
+  "myntra": "https://www.myntra.com",
+  "netflix": "https://www.netflix.com",
+  "spotify": "https://open.spotify.com",
+  "chatgpt": "https://chatgpt.com",
+  "canva": "https://www.canva.com",
+  "github": "https://github.com",
+  "wikipedia": "https://www.wikipedia.org",
+  "irctc": "https://www.irctc.co.in",
+  "aadhaar": "https://uidai.gov.in",
+  "digilocker": "https://www.digilocker.gov.in",
+  "india": "https://www.india.gov.in",
+  "passport": "https://www.passportindia.gov.in",
+  "sbi": "https://sbi.co.in",
+  "phonepe": "https://www.phonepe.com",
+  "paytm": "https://paytm.com",
+  "news18": "https://www.news18.com",
+  "ndtv": "https://www.ndtv.com",
+  "times of india": "https://timesofindia.indiatimes.com",
+  "cricbuzz": "https://www.cricbuzz.com",
+  "espn": "https://www.espncricinfo.com",
+  "pexels": "https://www.pexels.com",
+  "lightroom": "https://lightroom.adobe.com"
+};
+
+function openWebsite(command) {
+  let text = command.toLowerCase()
+    .replace("open ", "")
+    .replace("kholo", "")
+    .replace(" खोलो", "")
+    .trim();
+
+  if (websites[text]) {
+    speak("Opening " + text);
+    window.location.href = websites[text];
+  } else {
+    speak("Website nahi mili. Google par search kar raha hoon.");
+    window.location.href =
+      "https://www.google.com/search?q=" +
+      encodeURIComponent(text);
+  }
+}<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
